@@ -44,21 +44,36 @@ function countControlBits(binWord) {
   return binWord;
 }
 
+function sanitize(coded) {
+  let res = coded;
+  res = coded.slice(2,3) + coded.slice(3+1, 7) + coded.slice(7+1, 18);
+  return String.fromCharCode(parseInt(res.substr(0,7), 2)) + String.fromCharCode(parseInt(res.substr(7,15), 2));
+}
+
+function fixError() {
+
+}
 
 function test(word) {
   let res = code(word);
 
   // generate test cases
   let tests = [res];
-  for(let i = 1; i < 4; i++) {
+  for(let i = 4; i < 7; i++) {
     tests.push(replaceSymbol(res, i, res[i] === '1'? '0' : '1'));
   }
 
   // check each test case
   for(let testWord of tests) {
     let isWordCorrect = testWord === countControlBits(testWord)
-    console.log( (isWordCorrect? 'correct ' : 'error ') + testWord)
+    if (isWordCorrect) {
+      console.log('decoded result', sanitize(testWord))
+    } else {
+      console.log('error', testWord, 'decoded as ', sanitize(testWord))
+    }
   }
+
+
 }
 
 
