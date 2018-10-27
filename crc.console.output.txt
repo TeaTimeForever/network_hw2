@@ -1,0 +1,30 @@
+
+Tests for: word = 1101101, divisor = 10101
+correct 11011011011
+error 10011011011
+error 11111011011
+error 11001011011
+
+Tests for: word = 1001011, divisor = 11001
+correct 10010111111
+error 11010111111
+error 10110111111
+error 10000111111
+
+Tests for: word = 100000, divisor = 11111
+correct 1000001111
+error 1100001111
+error 1010001111
+error 1001001111
+
+Tests for: word = 1111111, divisor = 11101
+correct 11111111011
+error 10111111011
+error 11011111011
+error 11101111011
+
+Tests for: word = 1111100, divisor = 10001
+correct 11111001011
+error 10111001011
+error 11011001011
+error 11101001011
