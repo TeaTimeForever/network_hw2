@@ -50,32 +50,50 @@ function sanitize(coded) {
   return String.fromCharCode(parseInt(res.substr(0,7), 2)) + String.fromCharCode(parseInt(res.substr(7,15), 2));
 }
 
-function fixError() {
-
+function fixError(word) {
+  let controlBits = [1, 2, 4, 8, 16];
+  let counted = countControlBits(word)
+  let wrongBits = []
+  for(let bit of controlBits) {
+    if(word[bit-1] !== counted[bit-1]) {
+      wrongBits.push(bit);
+    }
+  }
+  let errorBit = wrongBits.reduce((acc, v) => acc += v, 0)
+  let res = replaceSymbol(word, errorBit-1, (word[errorBit-1] === '0'? '1' : '0'))
+  console.error(`Error in ${errorBit} bit. After fix value is ${res} and decoded as ${sanitize(res)}`)
+  return res;
 }
 
 function test(word) {
   let res = code(word);
-
+  
   // generate test cases
   let tests = [res];
   for(let i = 4; i < 7; i++) {
     tests.push(replaceSymbol(res, i, res[i] === '1'? '0' : '1'));
   }
-
+  
   // check each test case
   for(let testWord of tests) {
-    let isWordCorrect = testWord === countControlBits(testWord)
+    let isWordCorrect = testWord === countControlBits(testWord);
+    
     if (isWordCorrect) {
-      console.log('decoded result', sanitize(testWord))
+      console.log(`test PASSED: ${testWord}. Decoded as ${sanitize(testWord)}`)
     } else {
-      console.log('error', testWord, 'decoded as ', sanitize(testWord))
+      console.log(`test FAILED: ${testWord}. Decoded as ${sanitize(testWord)}`)
+      fixError(testWord); 
     }
+    console.log('--------')
   }
-
-
+  console.log()
 }
 
 
 test('KP')
+test('LP')
+test('sp')
+test('oo')
+test('Do')
+
 
